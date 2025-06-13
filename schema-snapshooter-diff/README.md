@@ -42,26 +42,24 @@ Navigate to `schema-snapshooter-diff/r/`. Detailed installation and usage instru
 ---
 
 ## Project Structure within `schema-snapshooter-diff`
-schema-snapshooter-diff/
-├── README.md                  # This file: Specific overview for schema-snapshooter-diff.
-│
-├── python/                    # Contains the full Python package implementation.
-│   ├── src/                   # Python source code.
-│   ├── tests/                 # Python unit tests.
-│   ├── data/                  # Sample data for Python examples/tests.
-│   ├── snapshots/             # Example snapshots from Python runs.
-│   ├── requirements.txt       # Python dependencies.
-│   ├── setup.py               # For pip-installable package.
-│   └── main.py                # Python CLI entry point.
-│
-└── r/                         # Contains the full R package implementation.
-├── R/                     # R package source code.
-├── man/                   # R package documentation.
-├── tests/                 # R unit tests.
-├── data/                  # Sample data for R examples/tests.
-├── vignettes/             # R Markdown usage vignettes.
-├── DESCRIPTION            # R package metadata.
-└── NAMESPACE              # R package namespace definition.
+**Key Components:**
+* **`README.md`**: This file, providing an overview specific to the `schema-snapshooter-diff` utility.
+* **`python/`**: Contains the complete Python package implementation, including:
+    * `src/`: Python source code.
+    * `tests/`: Python unit tests.
+    * `data/`: Sample data for Python examples/tests.
+    * `snapshots/`: Example snapshots from Python runs.
+    * `requirements.txt`: Python dependencies.
+    * `setup.py`: For pip-installable package.
+    * `main.py`: Python CLI entry point.
+* **`r/`**: Contains the complete R package implementation, including:
+    * `R/`: R package source code.
+    * `man/`: R package documentation.
+    * `tests/`: R unit tests.
+    * `data/`: Sample data for R examples/tests.
+    * `vignettes/`: R Markdown usage vignettes.
+    * `DESCRIPTION`: R package metadata.
+    * `NAMESPACE`: R package namespace definition.
 
 ---
 
