@@ -1,0 +1,43 @@
+# General
+.DS_Store             # macOS system files
+.env                  # Environment variables
+.ipynb_checkpoints/   # Jupyter notebooks checkpoints
+*.log                 # Log files
+*.sqlite3             # SQLite databases
+*.db                  # General database files
+!data/.gitkeep        # Allow empty data directory (if used)
+!snapshots/.gitkeep   # Allow empty snapshots directory (if used)
+
+# Python
+__pycache__/          # Python compiled bytecode
+*.pyc                 # Python compiled files
+.Python               # Python virtual environment directory
+env/                  # Virtual environment
+venv/                 # Virtual environment
+*.egg-info/           # Python egg info
+build/                # Build directory
+dist/                 # Distribution directory
+.venv/                # Common venv folder
+pip-wheel-metadata/   # Pip wheel metadata
+
+# R
+.Rproj.user/          # RStudio project files
+.Rdata                # R data images
+.Rhistory             # R history files
+.Rprofile             # R profile
+.Renviron             # R environment variables
+.rds                  # R serialized objects
+*.Rcheck/             # R package check directory
+*.tar.gz              # R package source tarball
+*.so                  # R shared objects (compiled C/C++/Fortran code)
+*.dll                 # R DLLs (Windows)
+*.o                   # R object files
+/renv/                # renv environment
+
+# VS Code
+.vscode/              # VS Code specific settings/launch files
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/             # VS Code Local History extension
