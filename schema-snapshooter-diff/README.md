@@ -85,4 +85,3 @@ For contributions specific to this `schema-snapshooter-diff` utility, please ref
 This utility is part of the `cross-language-data-utilities` project and is licensed under the [MIT License](../../LICENSE).
 
 ---
-
