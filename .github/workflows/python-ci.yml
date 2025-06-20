@@ -11,36 +11,27 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest # The type of runner machine to use (latest Ubuntu)
+    runs-on: ubuntu-latest # Uses the latest Ubuntu environment
 
     steps:
-    - name: Checkout code # Step to get your repository's code
+    - name: Checkout code # Step to clone your repository's code
       uses: actions/checkout@v4
 
-    - name: Set up Python 3.9 # Step to set up the Python environment
-      uses: actions/setup-python@v5 # Using the latest recommended version of the setup-python action
+    - name: Set up Python 3.9 # Step to configure the Python environment
+      uses: actions/setup-python@v5 # Uses the latest recommended version of the setup-python action
       with:
-        python-version: '3.9' # Specify the exact Python version
-        cache: 'pip' # Caches pip dependencies for faster runs
+        python-version: '3.9' # Specifies the exact Python version to use
+        cache: 'pip' # Caches pip dependencies to speed up future runs
 
-    - name: Install dependencies and tools # Step to install necessary packages
+    - name: Install testing and linting tools # Step to install necessary development tools
       run: |
-        python -m pip install --upgrade pip # Upgrade pip itself
+        python -m pip install --upgrade pip # Ensures pip is up to date
+        pip install pytest flake8 black pre-commit # Installs tools directly
 
-        # IMPORTANT: Choose ONE of the following lines for your main project dependencies:
-        # 1. If you have a 'requirements.txt' file in your project's root:
-        pip install -r requirements.txt
-        # 2. If you DO NOT have a 'requirements.txt' file, you might not need this line.
-        #    (If your project has no external dependencies, you can omit 'pip install -r requirements.txt')
-
-        # Install development tools like pytest, flake8, black, pre-commit
-        # Adjust this list based on what you actually use in your project for testing/linting/formatting
-        pip install pytest flake8 black pre-commit
-
-    - name: Run pre-commit checks # Step to run pre-commit hooks (assumes .pre-commit-config.yaml exists)
-      # This step will fail if pre-commit hooks are not set up or pass
+    - name: Run pre-commit checks # Step to execute pre-commit hooks
+      # This step assumes you have a .pre-commit-config.yaml file in your repository root
       run: pre-commit run --all-files
 
-    - name: Run tests with pytest # Step to execute your tests
-      # This step assumes your tests are set up to be run with the 'pytest' command
+    - name: Run tests with pytest # Step to run your project's tests
+      # This step assumes your tests are configured to be run with the 'pytest' command
       run: pytest
