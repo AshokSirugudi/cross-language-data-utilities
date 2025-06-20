@@ -4,31 +4,43 @@ on:
   push:
     branches:
       - main
-      - develop # Add if you plan to use a 'develop' branch
+      - 'feat/**' # Triggers on pushes to main and any 'feat/' branches
   pull_request:
     branches:
       - main
-      - develop # Add if you plan to use a 'develop' branch
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # The type of runner machine to use (latest Ubuntu)
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install poetry  # Assuming poetry for dependency management, adjust if using requirements.txt
-          # If using requirements.txt: pip install -r requirements.txt
-          pip install pytest flake8 black pre-commit
-      - name: Install pre-commit hooks
-        run: pre-commit install
-      - name: Run pre-commit checks
-        run: pre-commit run --all-files
-      - name: Run tests with pytest
-        run: pytest
+    - name: Checkout code # Step to get your repository's code
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.9 # Step to set up the Python environment
+      uses: actions/setup-python@v5 # Using the latest recommended version of the setup-python action
+      with:
+        python-version: '3.9' # Specify the exact Python version
+        cache: 'pip' # Caches pip dependencies for faster runs
+
+    - name: Install dependencies and tools # Step to install necessary packages
+      run: |
+        python -m pip install --upgrade pip # Upgrade pip itself
+
+        # IMPORTANT: Choose ONE of the following lines for your main project dependencies:
+        # 1. If you have a 'requirements.txt' file in your project's root:
+        pip install -r requirements.txt
+        # 2. If you DO NOT have a 'requirements.txt' file, you might not need this line.
+        #    (If your project has no external dependencies, you can omit 'pip install -r requirements.txt')
+
+        # Install development tools like pytest, flake8, black, pre-commit
+        # Adjust this list based on what you actually use in your project for testing/linting/formatting
+        pip install pytest flake8 black pre-commit
+
+    - name: Run pre-commit checks # Step to run pre-commit hooks (assumes .pre-commit-config.yaml exists)
+      # This step will fail if pre-commit hooks are not set up or pass
+      run: pre-commit run --all-files
+
+    - name: Run tests with pytest # Step to execute your tests
+      # This step assumes your tests are set up to be run with the 'pytest' command
+      run: pytest
