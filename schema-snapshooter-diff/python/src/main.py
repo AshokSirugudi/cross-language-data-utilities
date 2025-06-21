@@ -26,7 +26,7 @@ def main():
     get_parser.add_argument(
         "--file", required=True, help="Path to the input data file (CSV, XLSX, JSON)."
     )
-    get_parser.add_parser("get").add_argument(
+    get_parser.add_argument(  # CORRECTED: Removed the redundant 'get_parser("get")' call
         "--output", required=True, help="Path to save the inferred schema JSON."
     )
 
