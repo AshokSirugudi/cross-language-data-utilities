@@ -2,7 +2,7 @@ import argparse
 import json
 import os
 import pandas as pd
-from schema_snapshooter_diff.python.src import schema_logic
+from schema_snapshooter_diff.python.src import schema_logic  # type: ignore
 from termcolor import colored
 import sys  # New import for sys.exit
 
@@ -26,7 +26,7 @@ def main():
     get_parser.add_argument(
         "--file", required=True, help="Path to the input data file (CSV, XLSX, JSON)."
     )
-    get_parser.add_argument(
+    get_parser.add_parser("get").add_argument(
         "--output", required=True, help="Path to save the inferred schema JSON."
     )
 
@@ -144,7 +144,8 @@ def main():
                 sys.exit(1)
             except Exception as e:
                 _print_error(
-                    f"Error loading schema file '{args.file1}': {e}", args.output_format
+                    f"Error loading schema file '{args.file1}': {e}",
+                    args.output_format,
                 )
                 sys.exit(1)
 
@@ -159,7 +160,8 @@ def main():
                 sys.exit(1)
             except Exception as e:
                 _print_error(
-                    f"Error loading schema file '{args.file2}': {e}", args.output_format
+                    f"Error loading schema file '{args.file2}': {e}",
+                    args.output_format,
                 )
                 sys.exit(1)
 
