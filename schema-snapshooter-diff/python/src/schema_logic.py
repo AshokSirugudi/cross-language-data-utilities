@@ -20,9 +20,7 @@ def map_pandas_type_to_schema_type(pandas_type_str, column_series):
     elif is_numeric_dtype(column_series):
         if "int" in pandas_type_str or "Int" in pandas_type_str:
             return "integer"
-        elif "float" in pandas_type_str:
-            return "number"
-        else:
+        else:  # If it's numeric but not an integer-like string, it's a general number.
             return "number"
     elif pandas_type_str in [
         "string",
