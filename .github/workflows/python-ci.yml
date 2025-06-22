@@ -26,19 +26,17 @@ jobs:
       - name: Install dependencies and tools
         run: |
           python -m pip install --upgrade pip
-          pip install --upgrade setuptools wheel # Added this line
+          pip install --upgrade setuptools wheel
           # Install project dependencies
           pip install pandas numpy
           # Install testing and linting tools
           pip install pytest flake8 black pre-commit
 
-
-      # --- START MODIFICATION ---
       - name: Install project package
         working-directory: schema-snapshooter-diff/python
         run: pip install . # This installs the schema-snapshooter-diff package itself
-      # --- END MODIFICATION ---
 
       - name: Run tests with pytest
+        working-directory: schema-snapshooter-diff/python # Added this line
         run: |
           pytest
