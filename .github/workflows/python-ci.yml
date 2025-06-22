@@ -37,6 +37,6 @@ jobs:
         run: pip install . # This installs the schema-snapshooter-diff package itself
 
       - name: Run tests with pytest
-        working-directory: schema-snapshooter-diff/python # Added this line
+        working-directory: schema-snapshooter-diff/python
         run: |
-          pytest
+          python -m pytest # Changed from 'pytest'
