@@ -37,9 +37,12 @@ jobs:
 
       # --- START MODIFICATION ---
       - name: Install project package
+        working-directory: schema-snapshooter-diff/python
         run: pip install . # This installs the schema-snapshooter-diff package itself
       # --- END MODIFICATION ---
 
       - name: Run tests with pytest
         run: |
           pytest
+
+
