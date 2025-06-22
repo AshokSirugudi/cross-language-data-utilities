@@ -35,6 +35,11 @@ jobs:
         run: |
           pre-commit run --all-files
 
+      # --- START MODIFICATION ---
+      - name: Install project package
+        run: pip install . # This installs the schema-snapshooter-diff package itself
+      # --- END MODIFICATION ---
+
       - name: Run tests with pytest
         run: |
           pytest
