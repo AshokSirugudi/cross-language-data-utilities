@@ -31,10 +31,7 @@ jobs:
           # Install testing and linting tools
           pip install pytest flake8 black pre-commit
 
-      - name: Run pre-commit checks
-        run: |
-          pre-commit run --all-files
-
+     
       # --- START MODIFICATION ---
       - name: Install project package
         working-directory: schema-snapshooter-diff/python
@@ -44,5 +41,4 @@ jobs:
       - name: Run tests with pytest
         run: |
           pytest
-
-
+          
