@@ -1,48 +1,28 @@
-# pyproject.toml (located at schema-snapshooter-diff/python/pyproject.toml)
+[project]
+name = "schema-snapshooter-diff"
+version = "0.0.1"
+dependencies = [
+    "pandas>=2.0.0",
+    "pyarrow>=12.0.0",
+    "rich>=13.0.0",
+    "typer[all]>=0.9.0",
+    "typing_extensions>=4.0.0",
+]
 
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
-[project]
-name = "schema-snapshooter-diff" # The name of THIS Python package
-version = "0.1.0"
-description = "Python utilities for cross-language data schema and validation." # Specific description for the Python part
-readme = "README.md" # Path relative to this pyproject.toml to the Python package's README
+[tool.setuptools]
+packages = ["schema_snapshooter_diff"]
 
-requires-python = ">=3.8"
-license = "MIT" # UPDATED: Changed from { file = "LICENSE" } to a simple SPDX expression
-keywords = ["data", "schema", "validation", "python", "utilities"] # Keywords tailored for the Python package
-authors = [
-    { name = "Ashok Sirugudi", email = "your.email@example.com" }
-]
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Operating System :: OS Independent",
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: Developers",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Scientific/Engineering :: Information Analysis",
-    "Topic :: Utilities",
-]
+[tool.setuptools.package-data]
+"schema_snapshooter_diff" = ["py.typed"]
 
-[project.urls]
-Homepage = "https://github.com/AshokSirugudi/cross-language-data-utilities" # Still points to the overall repository
-Repository = "https://github.com/AshokSirugudi/cross-language-data-utilities" # Still points to the overall repository
-Issues = "https://github.com/AshokSirugudi/cross-language-data-utilities/issues" # Still points to the overall repository
-
-# Optional: Define your project's runtime dependencies here.
-# [project.dependencies]
-# pandas = ">=1.0.0"
-# numpy = ">=1.18.0"
-# etc.
-
-# Setuptools configuration to find your package
 [tool.setuptools.packages.find]
-where = ["."] # Tells setuptools to look for packages directly within this directory (schema-snapshooter-diff/python/)
-            # It will find 'schema_snapshooter_diff/' which contains your Python package.
+include = ["schema_snapshooter_diff*"]
+namespaces = false
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
