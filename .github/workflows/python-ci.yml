@@ -39,4 +39,5 @@ jobs:
       - name: Run tests with pytest
         working-directory: schema-snapshooter-diff/python
         run: |
-          python -m pytest # Changed from 'pytest'
+          export PYTHONPATH=$(pwd) # Added this line
+          python -m pytest
