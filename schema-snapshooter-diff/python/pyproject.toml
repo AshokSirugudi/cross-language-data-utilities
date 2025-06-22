@@ -1,0 +1,48 @@
+# pyproject.toml (located at schema-snapshooter-diff/python/pyproject.toml)
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "schema-snapshooter-diff" # The name of THIS Python package
+version = "0.1.0"
+description = "Python utilities for cross-language data schema and validation." # Specific description for the Python part
+readme = "../../README.md" # Path relative to this pyproject.toml to the repository's top-level README
+requires-python = ">=3.8"
+license = { file = "../../LICENSE" } # Path relative to this pyproject.toml to the repository's top-level LICENSE
+keywords = ["data", "schema", "validation", "python", "utilities"] # Keywords tailored for the Python package
+authors = [
+    { name = "Ashok Sirugudi", email = "your.email@example.com" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Utilities",
+]
+
+[project.urls]
+Homepage = "https://github.com/AshokSirugudi/cross-language-data-utilities" # Still points to the overall repository
+Repository = "https://github.com/AshokSirugudi/cross-language-data-utilities" # Still points to the overall repository
+Issues = "https://github.com/AshokSirugudi/cross-language-data-utilities/issues" # Still points to the overall repository
+
+# Optional: Define your project's runtime dependencies here.
+# [project.dependencies]
+# pandas = ">=1.0.0"
+# numpy = ">=1.18.0"
+# etc.
+
+# Setuptools configuration to find your package
+[tool.setuptools.packages.find]
+where = ["."] # Tells setuptools to look for packages directly within this directory (schema-snapshooter-diff/python/)
+              # It will find 'schema_snapshooter_diff/' which contains your Python package.
