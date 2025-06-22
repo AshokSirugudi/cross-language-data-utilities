@@ -8,9 +8,10 @@ build-backend = "setuptools.build_meta"
 name = "schema-snapshooter-diff" # The name of THIS Python package
 version = "0.1.0"
 description = "Python utilities for cross-language data schema and validation." # Specific description for the Python part
-readme = "../../README.md" # Path relative to this pyproject.toml to the repository's top-level README
+readme = "README.md" # Path relative to this pyproject.toml to the Python package's README
+
 requires-python = ">=3.8"
-license = { file = "../../LICENSE" } # Path relative to this pyproject.toml to the repository's top-level LICENSE
+license = "MIT" # UPDATED: Changed from { file = "LICENSE" } to a simple SPDX expression
 keywords = ["data", "schema", "validation", "python", "utilities"] # Keywords tailored for the Python package
 authors = [
     { name = "Ashok Sirugudi", email = "your.email@example.com" }
@@ -22,7 +23,6 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -45,4 +45,4 @@ Issues = "https://github.com/AshokSirugudi/cross-language-data-utilities/issues"
 # Setuptools configuration to find your package
 [tool.setuptools.packages.find]
 where = ["."] # Tells setuptools to look for packages directly within this directory (schema-snapshooter-diff/python/)
-              # It will find 'schema_snapshooter_diff/' which contains your Python package.
+            # It will find 'schema_snapshooter_diff/' which contains your Python package.
