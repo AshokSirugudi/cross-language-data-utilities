@@ -21,7 +21,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.10 # Keeping 3.10 as agreed for now, focusing on TOML structure
+      - name: Set up Python 3.10
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
@@ -77,6 +77,10 @@ jobs:
           cat pyproject.toml
           
           pip install .
+
+      - name: Install Pytest # NEW STEP ADDED HERE
+        run: |
+          pip install pytest
 
       - name: Run tests with pytest
         run: |
