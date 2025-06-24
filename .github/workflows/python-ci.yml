@@ -76,12 +76,12 @@ jobs:
           echo "Contents of pyproject.toml after recreation on runner:"
           cat pyproject.toml
           
-          pip install -e . # CHANGED from 'pip install .' to 'pip install -e .'
+          pip install -e .
 
       - name: Install Pytest
         run: |
           pip install pytest
 
-      - name: Run tests with pytest
+      - name: Run tests with pytest # MODIFIED THIS STEP
         run: |
-          pytest
+          PYTHONPATH=. pytest
