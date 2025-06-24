@@ -78,10 +78,18 @@ jobs:
           
           pip install -e .
 
+      - name: Debug: List schema_snapshooter_diff content # NEW DIAGNOSTIC STEP
+        run: |
+          ls -F schema_snapshooter_diff/
+
+      - name: Debug: List tests/cli content # NEW DIAGNOSTIC STEP
+        run: |
+          ls -F tests/cli/
+
       - name: Install Pytest
         run: |
           pip install pytest
 
-      - name: Run tests with pytest # MODIFIED THIS STEP
+      - name: Run tests with pytest
         run: |
           PYTHONPATH=. pytest
