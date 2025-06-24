@@ -27,6 +27,17 @@ jobs:
           python-version: '3.9'
           cache: 'pip' # Cache pip dependencies
 
+      - name: Debug Pip and Setuptools versions
+        run: |
+          echo "Pip version:"
+          pip --version
+          echo "Setuptools version:"
+          pip show setuptools
+
+      - name: Upgrade Pip and Setuptools
+        run: |
+          pip install --upgrade pip setuptools
+
       - name: Recreate pyproject.toml and Install packages
         run: |
           echo 'Creating pyproject.toml cleanly on runner...'
@@ -71,4 +82,3 @@ jobs:
       - name: Run tests with pytest
         run: |
           pytest
- 
