@@ -2,9 +2,9 @@ import argparse
 import json
 import os
 import pandas as pd
-from schema_snapshooter_diff.python.src import schema_logic  # type: ignore
+from . import schema_logic 
 from termcolor import colored
-import sys  # New import for sys.exit
+import sys
 
 
 def main():
@@ -26,7 +26,7 @@ def main():
     get_parser.add_argument(
         "--file", required=True, help="Path to the input data file (CSV, XLSX, JSON)."
     )
-    get_parser.add_argument(  # CORRECTED: Removed the redundant 'get_parser("get")' call
+    get_parser.add_argument(
         "--output", required=True, help="Path to save the inferred schema JSON."
     )
 
@@ -61,18 +61,18 @@ def main():
 
     args = parser.parse_args()
 
-    try:  # Global try-except for unhandled exceptions
-        # --- Command Execution Logic ---
+    # Place a single try-except around the entire command execution logic
+    # to catch unhandled exceptions and ensure a single sys.exit(1) for critical errors.
+    try:
         if args.command == "get":
             if args.output_format == "text":
                 print(colored(f"\n--- Inferring Schema from: {args.file} ---", "cyan"))
                 print(f"Input File: {args.file}")
                 print(f"Output File: {args.output}")
 
-            # Check if input file exists
             if not os.path.exists(args.file):
                 _print_error(f"Input file not found: '{args.file}'", args.output_format)
-                sys.exit(1)  # Exit with error code
+                sys.exit(1) # Exit immediately after error
 
             inferred_schema, schema_error = schema_logic.get_schema(args.file)
             if inferred_schema:
@@ -99,26 +99,25 @@ def main():
                                 indent=4,
                             )
                         )
+                    sys.exit(0) # Successful exit after get command completes
                 else:
                     _print_error(
                         f"Failed to save schema snapshot: {save_error_msg}",
                         args.output_format,
                     )
-                    sys.exit(1)
+                    sys.exit(1) # Exit immediately after error
             else:
                 _print_error(
                     f"Failed to infer schema: {schema_error}", args.output_format
                 )
-                sys.exit(1)
+                sys.exit(1) # Exit immediately after error
 
         elif args.command == "compare":
             if args.output_format == "text":
-                # Fix for F541: Removed 'f' prefix as no placeholders are used
                 print(colored("\n--- Comparing Schemas ---", "cyan"))
                 print(f"Schema 1: {args.file1}")
                 print(f"Schema 2: {args.file2}")
 
-            # Check if input schema files exist
             if not os.path.exists(args.file1):
                 _print_error(
                     f"Schema file not found: '{args.file1}'", args.output_format
@@ -183,15 +182,14 @@ def main():
                     "differences": diff,
                 }
                 print(json.dumps(output_json, indent=4))
+            sys.exit(0) # Exit successfully after compare command completes
 
         elif args.command == "validate":
             if args.output_format == "text":
-                # Fix for F541: Removed 'f' prefix as no placeholders are used
                 print(colored("\n--- Validating Data Against Schema ---", "cyan"))
                 print(f"Data File: {args.data_file}")
                 print(f"Schema File: {args.schema_file}")
 
-            # Check if input files exist
             if not os.path.exists(args.data_file):
                 _print_error(
                     f"Data file not found: '{args.data_file}'", args.output_format
@@ -236,7 +234,7 @@ def main():
                     args.output_format,
                 )
                 sys.exit(1)
-            except FileNotFoundError:  # Caught by os.path.exists, but good fallback
+            except FileNotFoundError: # Caught by os.path.exists, but good fallback
                 _print_error(
                     f"Data file not found at '{args.data_file}'.", args.output_format
                 )
@@ -259,12 +257,12 @@ def main():
                     "No data or empty DataFrame inferred from data file. No validation performed.",
                     args.output_format,
                 )
-                sys.exit(0)  # Exit without error for empty data
+                sys.exit(0) # Exit without error for empty data
 
             try:
                 with open(args.schema_file, "r") as f:
                     schema = json.load(f)
-            except FileNotFoundError:  # Caught by os.path.exists, but good fallback
+            except FileNotFoundError: # Caught by os.path.exists, but good fallback
                 _print_error(
                     f"Schema file not found at '{args.schema_file}'.",
                     args.output_format,
@@ -347,19 +345,18 @@ def main():
                 print(json.dumps(final_json_output, indent=4))
 
             if not all_valid:
-                sys.exit(1)  # Exit with error code if validation fails
-            sys.exit(0)  # Exit successfully if all valid
-
-        else:  # No command given
+                sys.exit(1) # Exit with error code if validation fails
+            sys.exit(0) # Exit successfully if all valid
+        else: # No command given or unknown command
             parser.print_help()
-            sys.exit(1)  # Exit with error code
+            sys.exit(1)
 
     except Exception as e:
         _print_error(
             f"An unexpected critical error occurred: {e}",
-            args.output_format if "args" in locals() else "text",
+            args.output_format if 'args' in locals() and hasattr(args, 'output_format') else "text",
         )
-        sys.exit(1)  # Catch any unhandled exceptions and exit with error code
+        sys.exit(1)
 
 
 def _print_error(message, output_format):
