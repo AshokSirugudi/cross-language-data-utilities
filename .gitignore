@@ -41,3 +41,7 @@ pip-wheel-metadata/   # Pip wheel metadata
 !.vscode/launch.json
 !.vscode/extensions.json
 .history/             # VS Code Local History extension
+# Python virtual environment
+venv/
+*.pyc
+__pycache__/
