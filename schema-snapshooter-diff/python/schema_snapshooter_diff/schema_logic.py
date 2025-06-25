@@ -9,7 +9,7 @@ from pandas.api.types import (
     is_datetime64_any_dtype,
     is_bool_dtype,
 )
-
+from typing import Tuple # ADD THIS LINE
 
 def map_pandas_type_to_schema_type(pandas_type_str, column_series):
     """Maps pandas inferred types to a more generalized schema type."""
@@ -121,8 +121,11 @@ def get_schema(file_path):
     return schema, None
 
 
-def compare_schemas(schema1, schema2):
-    """Compares two schemas and returns differences."""
+def compare_schemas(schema1: dict, schema2: dict) -> Tuple[dict, bool]: # MODIFIED LINE
+    """
+    Compares two schema dictionaries and returns a dictionary of differences
+    and a boolean indicating if any differences were found.
+    """
     diff = {}
     is_different = False
 
@@ -138,16 +141,22 @@ def compare_schemas(schema1, schema2):
         col_diff = {}
 
         if details1 and details2:
-            for prop in ["dataType", "actualType", "nullable", "dataValues"]:
+            # Compare properties for common columns
+            for prop in ["dataType", "actualType", "nullable"]:
                 val1 = details1.get(prop)
                 val2 = details2.get(prop)
-                if prop == "dataValues":
-                    if sorted(val1) != sorted(val2):
-                        col_diff[prop] = {"schema1": val1, "schema2": val2}
-                        is_different = True
-                elif val1 != val2:
+                if val1 != val2:
                     col_diff[prop] = {"schema1": val1, "schema2": val2}
                     is_different = True
+            
+            # Special handling for 'dataValues' (order-independent comparison)
+            # Ensure both lists are sorted before comparing to ignore order
+            dv1_sorted = sorted(details1.get("dataValues", []))
+            dv2_sorted = sorted(details2.get("dataValues", []))
+            if dv1_sorted != dv2_sorted:
+                col_diff["dataValues"] = {"schema1": details1.get("dataValues", []), "schema2": details2.get("dataValues", [])}
+                is_different = True
+                
         elif details1:
             col_diff["__status__"] = "Only in Schema 1"
             col_diff["details"] = details1
@@ -159,7 +168,7 @@ def compare_schemas(schema1, schema2):
 
         if col_diff:
             diff[col_name] = col_diff
-
+            
     return diff, is_different
 
 
