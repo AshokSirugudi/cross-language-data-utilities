@@ -2,9 +2,41 @@ import argparse
 import json
 import os
 import pandas as pd
-from . import schema_logic 
 from termcolor import colored
 import sys
+
+# Add the parent directory of the package to sys.path if running directly.
+# This ensures modules within the package can be found.
+if __name__ == "__main__" and __package__ is None:
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    # Go up one level from schema_snapshooter_diff directory to reach the 'python' directory
+    package_root = os.path.abspath(os.path.join(script_dir, '..'))
+    sys.path.insert(0, package_root) # Add the 'python' directory to sys.path
+
+# Now, import schema_logic using its full package path
+from schema_snapshooter_diff import schema_logic
+
+
+def _print_error(message, output_format):
+    """Helper function to print error messages based on output format."""
+    if output_format == "text":
+        print(colored(f"Error: {message}", "red", attrs=["bold"]), file=sys.stderr)
+    elif output_format == "json":
+        print(
+            json.dumps({"status": "error", "message": message}, indent=4),
+            file=sys.stderr,
+        )
+
+
+def _print_warning(message, output_format):
+    """Helper function to print warning messages based on output format."""
+    if output_format == "text":
+        print(colored(f"Warning: {message}", "yellow"), file=sys.stderr)
+    elif output_format == "json":
+        print(
+            json.dumps({"status": "warning", "message": message}, indent=4),
+            file=sys.stderr,
+        )
 
 
 def main():
@@ -122,67 +154,73 @@ def main():
                 _print_error(
                     f"Schema file not found: '{args.file1}'", args.output_format
                 )
-                sys.exit(1)
+                sys.exit(2) # Exit code 2 for file not found error
             if not os.path.exists(args.file2):
                 _print_error(
                     f"Schema file not found: '{args.file2}'", args.output_format
                 )
-                sys.exit(1)
+                sys.exit(2) # Exit code 2 for file not found error
 
-            schema1 = None
-            schema2 = None
+            schema1_data = None
+            schema2_data = None
 
             try:
                 with open(args.file1, "r") as f:
-                    schema1 = json.load(f)
+                    schema1_data = json.load(f)
             except json.JSONDecodeError as e:
                 _print_error(
                     f"Invalid JSON format in schema file '{args.file1}': {e}",
                     args.output_format,
                 )
-                sys.exit(1)
+                sys.exit(2) # Exit code 2 for JSON parsing error
             except Exception as e:
                 _print_error(
                     f"Error loading schema file '{args.file1}': {e}",
                     args.output_format,
                 )
-                sys.exit(1)
+                sys.exit(2) # Exit code 2 for general loading error
 
             try:
                 with open(args.file2, "r") as f:
-                    schema2 = json.load(f)
+                    schema2_data = json.load(f)
             except json.JSONDecodeError as e:
                 _print_error(
                     f"Invalid JSON format in schema file '{args.file2}': {e}",
                     args.output_format,
                 )
-                sys.exit(1)
+                sys.exit(2) # Exit code 2 for JSON parsing error
             except Exception as e:
                 _print_error(
                     f"Error loading schema file '{args.file2}': {e}",
                     args.output_format,
                 )
-                sys.exit(1)
+                sys.exit(2) # Exit code 2 for general loading error
 
-            diff, is_different = schema_logic.compare_schemas(schema1, schema2)
+            diff_report, are_different = schema_logic.compare_schemas(schema1_data, schema2_data)
 
             if args.output_format == "text":
                 print(colored("\n--- Comparison Results ---", "cyan"))
-                if is_different:
+                if are_different:
                     print(colored("Schemas are DIFFERENT!", "red", attrs=["bold"]))
-                    print(json.dumps(diff, indent=4))
+                    print(json.dumps(diff_report, indent=4))
+                    print(colored("--------------------------\n", "cyan"))
+                    sys.exit(1) # Exit code 1 for schemas differ
                 else:
                     print(colored("Schemas are IDENTICAL.", "green", attrs=["bold"]))
-                print(colored("--------------------------\n", "cyan"))
+                    print(colored("--------------------------\n", "cyan"))
+                    sys.exit(0) # Exit code 0 for identical schemas
             elif args.output_format == "json":
                 output_json = {
                     "schema1_path": args.file1,
                     "schema2_path": args.file2,
-                    "are_identical": not is_different,
-                    "differences": diff,
+                    "are_identical": not are_different,
+                    "differences": diff_report,
                 }
                 print(json.dumps(output_json, indent=4))
-            sys.exit(0) # Exit successfully after compare command completes
+                if are_different:
+                    sys.exit(1) # Exit code 1 for schemas differ
+                else:
+                    sys.exit(0) # Exit code 0 for identical schemas
 
         elif args.command == "validate":
             if args.output_format == "text":
@@ -310,7 +348,7 @@ def main():
                             )
                         )
                         for error in errors:
-                            print(colored(f"  - {error}", "yellow"))
+                            print(colored(f"   - {error}", "yellow"))
 
                 if not is_valid:
                     all_valid = False
@@ -359,27 +397,6 @@ def main():
         sys.exit(1)
 
 
-def _print_error(message, output_format):
-    """Helper function to print error messages based on output format."""
-    if output_format == "text":
-        print(colored(f"Error: {message}", "red", attrs=["bold"]), file=sys.stderr)
-    elif output_format == "json":
-        print(
-            json.dumps({"status": "error", "message": message}, indent=4),
-            file=sys.stderr,
-        )
-
-
-def _print_warning(message, output_format):
-    """Helper function to print warning messages based on output format."""
-    if output_format == "text":
-        print(colored(f"Warning: {message}", "yellow"), file=sys.stderr)
-    elif output_format == "json":
-        print(
-            json.dumps({"status": "warning", "message": message}, indent=4),
-            file=sys.stderr,
-        )
-
-
 if __name__ == "__main__":
     main()
+    
