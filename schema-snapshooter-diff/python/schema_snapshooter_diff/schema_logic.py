@@ -9,7 +9,7 @@ from pandas.api.types import (
     is_datetime64_any_dtype,
     is_bool_dtype,
 )
-from typing import Tuple # ADD THIS LINE
+from typing import Tuple
 
 def map_pandas_type_to_schema_type(pandas_type_str, column_series):
     """Maps pandas inferred types to a more generalized schema type."""
@@ -20,7 +20,7 @@ def map_pandas_type_to_schema_type(pandas_type_str, column_series):
     elif is_numeric_dtype(column_series):
         if "int" in pandas_type_str or "Int" in pandas_type_str:
             return "integer"
-        else:  # If it's numeric but not an integer-like string, it's a general number.
+        else:   # If it's numeric but not an integer-like string, it's a general number.
             return "number"
     elif pandas_type_str in [
         "string",
@@ -79,7 +79,8 @@ def get_schema(file_path):
         return None, f"Error reading file '{file_path}': {e}"
 
     if df is None or df.empty:
-        return None, f"No data or empty DataFrame inferred from file '{file_path}'."
+        # Return an empty schema dictionary for empty but valid files, no error message
+        return {"columns": []}, None 
 
     schema = {"columns": []}
 
@@ -97,14 +98,15 @@ def get_schema(file_path):
         column_series = df[col]
         non_null_sample_values = data_sample[col].dropna()
 
-        column_details["nullable"] = column_series.isnull().any()
+        # --- MODIFIED LINE ---
+        column_details["nullable"] = bool(column_series.isnull().any())
+        # ---------------------
 
         if non_null_sample_values.empty:
             column_details["dataType"] = "null"
         else:
-            inferred_data_type_pandas = infer_dtype(
-                non_null_sample_values, infer_string=True
-            )
+            # REMOVED infer_string=True from here
+            inferred_data_type_pandas = infer_dtype(non_null_sample_values)
             column_details["dataType"] = map_pandas_type_to_schema_type(
                 inferred_data_type_pandas, non_null_sample_values
             )
@@ -121,7 +123,7 @@ def get_schema(file_path):
     return schema, None
 
 
-def compare_schemas(schema1: dict, schema2: dict) -> Tuple[dict, bool]: # MODIFIED LINE
+def compare_schemas(schema1: dict, schema2: dict) -> Tuple[dict, bool]:
     """
     Compares two schema dictionaries and returns a dictionary of differences
     and a boolean indicating if any differences were found.
@@ -256,14 +258,14 @@ def validate_data_against_schema(record, schema):
             elif expected_data_type == "boolean":
                 # Adjusted to bypass potential E713 on 'not in' with this more explicit check
                 if isinstance(value, bool):
-                    pass  # Native boolean is valid
+                    pass    # Native boolean is valid
                 elif isinstance(value, str):
                     lower_value = value.lower()
                     if lower_value != "true" and lower_value != "false":
                         errors.append(
                             f"Column '{col_name}' has invalid type. Expected '{expected_data_type}', got '{type(value).__name__}' for value '{value}'"
                         )
-                else:  # Any other non-string, non-bool type is invalid for boolean
+                else:   # Any other non-string, non-bool type is invalid for boolean
                     errors.append(
                         f"Column '{col_name}' has invalid type. Expected '{expected_data_type}', got '{type(value).__name__}' for value '{value}'"
                     )

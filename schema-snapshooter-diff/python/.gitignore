@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+pytest_full_log.txt
+temp_test_data/
